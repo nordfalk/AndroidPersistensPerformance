@@ -1,13 +1,12 @@
-package com.luja93.dbms_benchmark.greendao
+package com.luja93.dbms_benchmark.java_serialisering
 
 import android.content.Context
 import androidx.benchmark.junit4.BenchmarkRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.luja93.dbms_benchmark.BaseBenchmark
-import com.luja93.dbms_performance_benchmark.greendao.City_GreenDao
-import com.luja93.dbms_performance_benchmark.greendao.DaoSession
-import com.luja93.dbms_performance_benchmark.greendao.GreenDaoHelpers
+import com.luja93.dbms_performance_benchmark.java_serialisering.City_JavaSerialisering
+import com.luja93.dbms_performance_benchmark.java_serialisering.JavaSerialiseringHelpers
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -54,13 +53,13 @@ import org.junit.runner.RunWith
  *     particular purpose.
  */
 @RunWith(AndroidJUnit4::class)
-class GreenDaoBenchmark : BaseBenchmark<City_GreenDao, DaoSession, GreenDaoHelpers>() {
+class GreenDaoBenchmark : BaseBenchmark<City_JavaSerialisering, DaoSession, JavaSerialiseringHelpers>() {
 
     //region CLASS PROPERTIES
     override val benchmarkRule = BenchmarkRule()
     override val context: Context = ApplicationProvider.getApplicationContext()
-    override var cities: List<City_GreenDao> = emptyList()
-    override val helpers: GreenDaoHelpers = GreenDaoHelpers
+    override var cities: List<City_JavaSerialisering> = emptyList()
+    override val helpers: JavaSerialiseringHelpers = JavaSerialiseringHelpers
 
     private lateinit var db: DaoSession
     //endregion
@@ -76,7 +75,6 @@ class GreenDaoBenchmark : BaseBenchmark<City_GreenDao, DaoSession, GreenDaoHelpe
 
     @After
     fun destroy() {
-        db.database.close()
     }
     //endregion
 
