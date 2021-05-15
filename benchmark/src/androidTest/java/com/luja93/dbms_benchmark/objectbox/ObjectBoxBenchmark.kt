@@ -1,13 +1,13 @@
-package com.luja93.dbms_benchmark.room
+package com.luja93.dbms_benchmark.objectbox
 
 import android.content.Context
 import androidx.benchmark.junit4.BenchmarkRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.luja93.dbms_benchmark.BaseBenchmark
-import com.luja93.dbms_performance_benchmark.room.City_Room
-import com.luja93.dbms_performance_benchmark.room.RoomDB
-import com.luja93.dbms_performance_benchmark.room.RoomHelpers
+import com.luja93.dbms_performance_benchmark.objectbox.City_ObjectBox
+import com.luja93.dbms_performance_benchmark.objectbox.ObjectBoxHelpers
+import io.objectbox.BoxStore
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -28,10 +28,10 @@ import org.junit.runner.RunWith
  *
  * For regular run, use:
  *
- * adb shell am instrument -w -e "androidx.benchmark.output.enable" "true" -e \
- * "additionalTestOutputDir" "/sdcard/benchmark-results/room/" -e class \
- * com.luja93.dbms_benchmark.room.RoomBenchmark \
- * com.luja93.dbms_benchmark.test/androidx.benchmark.junit4.AndroidBenchmarkRunner
+adb shell am instrument -w -e "androidx.benchmark.output.enable" "true" -e \
+"additionalTestOutputDir" "/sdcard/benchmark-results/objectbox/" -e class \
+com.luja93.dbms_benchmark.objectbox.ObjectBoxBenchmark \
+com.luja93.dbms_benchmark.test/androidx.benchmark.junit4.AndroidBenchmarkRunner
  *
  * To run with Android Test Orchestrator, use:
  *
@@ -39,37 +39,39 @@ import org.junit.runner.RunWith
  * androidx.test.services.shellexecutor.ShellMain am instrument -r -w -e targetInstrumentation \
  * com.luja93.dbms_benchmark.test/androidx.benchmark.junit4.AndroidBenchmarkRunner -e \
  * clearPackageData true -e debug false -w -e "androidx.benchmark.output.enable" "true" -e \
- * "additionalTestOutputDir" "/sdcard/benchmark-results/room/" -e class \
- * 'com.luja93.dbms_benchmark.room.RoomBenchmark' \
+ * "additionalTestOutputDir" "/sdcard/benchmark-results/objectbox/" -e class \
+ * 'com.luja93.dbms_benchmark.objectbox.ObjectBoxBenchmark' \
  * androidx.test.orchestrator/androidx.test.orchestrator.AndroidTestOrchestrator
  *
  *
  * @author  Luka Leopoldović
  * @version 1.0
- * \date 23/03/2020
+ * \date 14/04/2020
  * \copyright
  *     This code and information is provided "as is" without warranty of
  *     any kind, either expressed or implied, including but not limited to
  *     the implied warranties of merchantability and/or fitness for a
  *     particular purpose.
  */
+
+/*
 @RunWith(AndroidJUnit4::class)
-class RoomBenchmark : BaseBenchmark<City_Room, RoomDB, RoomHelpers>() {
+class ObjectBoxBenchmark : BaseBenchmark<City_ObjectBox, BoxStore, ObjectBoxHelpers>() {
 
     //region CLASS PROPERTIES
     override val benchmarkRule = BenchmarkRule()
     override val context: Context = ApplicationProvider.getApplicationContext()
-    override var cities: List<City_Room> = emptyList()
-    override val helpers = RoomHelpers
+    override var cities: List<City_ObjectBox> = emptyList()
+    override val helpers = ObjectBoxHelpers
 
-    private lateinit var db: RoomDB
+    private lateinit var db: BoxStore
     //endregion
 
 
     //region BEFORE/AFTER
     @Before
     fun init() {
-        initialize(10_000) {
+        initialize(HOWMANY) {
             db = helpers.buildDb(context)
         }
     }
@@ -106,3 +108,5 @@ class RoomBenchmark : BaseBenchmark<City_Room, RoomDB, RoomHelpers>() {
     //endregion
 
 }
+
+*/

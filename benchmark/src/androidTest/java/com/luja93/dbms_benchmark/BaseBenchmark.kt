@@ -22,6 +22,8 @@ import org.junit.Rule
  *     particular purpose.
  */
 abstract class BaseBenchmark<City, Database, DBHelper : BaseHelpers<City, Database>> {
+    val HOWMANY = 100;
+
 
     //region SETUP
     /**

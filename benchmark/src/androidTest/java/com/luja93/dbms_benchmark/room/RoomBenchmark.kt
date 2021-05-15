@@ -1,13 +1,13 @@
-package com.luja93.dbms_benchmark.dbflow
+package com.luja93.dbms_benchmark.room
 
 import android.content.Context
 import androidx.benchmark.junit4.BenchmarkRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.luja93.dbms_benchmark.BaseBenchmark
-import com.luja93.dbms_performance_benchmark.dbflow.City_DBFlow
-import com.luja93.dbms_performance_benchmark.dbflow.DBFlowHelpers
-import com.raizlabs.android.dbflow.config.DatabaseDefinition
+import com.luja93.dbms_performance_benchmark.room.City_Room
+import com.luja93.dbms_performance_benchmark.room.RoomDB
+import com.luja93.dbms_performance_benchmark.room.RoomHelpers
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -29,8 +29,8 @@ import org.junit.runner.RunWith
  * For regular run, use:
  *
  * adb shell am instrument -w -e "androidx.benchmark.output.enable" "true" -e \
- * "additionalTestOutputDir" "/sdcard/benchmark-results/dbflow/" -e class \
- * com.luja93.dbms_benchmark.dbflow.DBFlowBenchmark \
+ * "additionalTestOutputDir" "/sdcard/benchmark-results/room/" -e class \
+ * com.luja93.dbms_benchmark.room.RoomBenchmark \
  * com.luja93.dbms_benchmark.test/androidx.benchmark.junit4.AndroidBenchmarkRunner
  *
  * To run with Android Test Orchestrator, use:
@@ -39,37 +39,38 @@ import org.junit.runner.RunWith
  * androidx.test.services.shellexecutor.ShellMain am instrument -r -w -e targetInstrumentation \
  * com.luja93.dbms_benchmark.test/androidx.benchmark.junit4.AndroidBenchmarkRunner -e \
  * clearPackageData true -e debug false -w -e "androidx.benchmark.output.enable" "true" -e \
- * "additionalTestOutputDir" "/sdcard/benchmark-results/dbflow/" -e class \
- * 'com.luja93.dbms_benchmark.dbflow.DBFlowBenchmark' \
+ * "additionalTestOutputDir" "/sdcard/benchmark-results/room/" -e class \
+ * 'com.luja93.dbms_benchmark.room.RoomBenchmark' \
  * androidx.test.orchestrator/androidx.test.orchestrator.AndroidTestOrchestrator
  *
  *
  * @author  Luka Leopoldović
  * @version 1.0
- * \date 04/04/2020
+ * \date 23/03/2020
  * \copyright
  *     This code and information is provided "as is" without warranty of
  *     any kind, either expressed or implied, including but not limited to
  *     the implied warranties of merchantability and/or fitness for a
  *     particular purpose.
  */
+
 @RunWith(AndroidJUnit4::class)
-class DBFlowBenchmark : BaseBenchmark<City_DBFlow, DatabaseDefinition, DBFlowHelpers>() {
+class RoomBenchmark : BaseBenchmark<City_Room, RoomDB, RoomHelpers>() {
 
     //region CLASS PROPERTIES
-    override val benchmarkRule: BenchmarkRule = BenchmarkRule()
+    override val benchmarkRule = BenchmarkRule()
     override val context: Context = ApplicationProvider.getApplicationContext()
-    override var cities: List<City_DBFlow> = emptyList()
-    override val helpers = DBFlowHelpers
+    override var cities: List<City_Room> = emptyList()
+    override val helpers = RoomHelpers
 
-    private lateinit var db: DatabaseDefinition
+    private lateinit var db: RoomDB
     //endregion
 
 
     //region BEFORE/AFTER
     @Before
     fun init() {
-        initialize(10_000) {
+        initialize(HOWMANY) {
             db = helpers.buildDb(context)
         }
     }
@@ -104,4 +105,6 @@ class DBFlowBenchmark : BaseBenchmark<City_DBFlow, DatabaseDefinition, DBFlowHel
         delete(db)
     }
     //endregion
+
 }
+

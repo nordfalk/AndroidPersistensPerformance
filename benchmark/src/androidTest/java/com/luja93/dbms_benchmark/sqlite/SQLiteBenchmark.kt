@@ -1,13 +1,13 @@
-package com.luja93.dbms_benchmark.realm
+package com.luja93.dbms_benchmark.sqlite
 
 import android.content.Context
 import androidx.benchmark.junit4.BenchmarkRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.luja93.dbms_benchmark.BaseBenchmark
-import com.luja93.dbms_performance_benchmark.realm.City_Realm
-import com.luja93.dbms_performance_benchmark.realm.RealmHelpers
-import io.realm.Realm
+import com.luja93.dbms_performance_benchmark.sqlite.CityReaderDbHelper
+import com.luja93.dbms_performance_benchmark.sqlite.City_SQLite
+import com.luja93.dbms_performance_benchmark.sqlite.SQLiteHelpers
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -29,8 +29,8 @@ import org.junit.runner.RunWith
  * For regular run, use:
  *
  * adb shell am instrument -w -e "androidx.benchmark.output.enable" "true" -e \
- * "additionalTestOutputDir" "/sdcard/benchmark-results/realm/" -e class \
- * com.luja93.dbms_benchmark.realm.RealmBenchmark \
+ * "additionalTestOutputDir" "/sdcard/benchmark-results/sqlite/" -e class \
+ * com.luja93.dbms_benchmark.sqlite.SQLiteBenchmark \
  * com.luja93.dbms_benchmark.test/androidx.benchmark.junit4.AndroidBenchmarkRunner
  *
  * To run with Android Test Orchestrator, use:
@@ -39,14 +39,14 @@ import org.junit.runner.RunWith
  * androidx.test.services.shellexecutor.ShellMain am instrument -r -w -e targetInstrumentation \
  * com.luja93.dbms_benchmark.test/androidx.benchmark.junit4.AndroidBenchmarkRunner -e \
  * clearPackageData true -e debug false -w -e "androidx.benchmark.output.enable" "true" -e \
- * "additionalTestOutputDir" "/sdcard/benchmark-results/realm/" -e class \
- * 'com.luja93.dbms_benchmark.realm.RealmBenchmark' \
+ * "additionalTestOutputDir" "/sdcard/benchmark-results/sqlite/" -e class \
+ * 'com.luja93.dbms_benchmark.sqlite.SQLiteBenchmark' \
  * androidx.test.orchestrator/androidx.test.orchestrator.AndroidTestOrchestrator
  *
  *
  * @author  Luka Leopoldović
  * @version 1.0
- * \date 13/04/2020
+ * \date 05/04/2020
  * \copyright
  *     This code and information is provided "as is" without warranty of
  *     any kind, either expressed or implied, including but not limited to
@@ -54,22 +54,21 @@ import org.junit.runner.RunWith
  *     particular purpose.
  */
 @RunWith(AndroidJUnit4::class)
-class RealmBenchmark : BaseBenchmark<City_Realm, Realm, RealmHelpers>() {
-
+class SQLiteBenchmark : BaseBenchmark<City_SQLite, CityReaderDbHelper, SQLiteHelpers>() {
     //region CLASS PROPERTIES
     override val benchmarkRule = BenchmarkRule()
     override val context: Context = ApplicationProvider.getApplicationContext()
-    override var cities: List<City_Realm> = emptyList()
-    override val helpers = RealmHelpers
+    override var cities: List<City_SQLite> = emptyList()
+    override val helpers = SQLiteHelpers
 
-    private lateinit var db: Realm
+    private lateinit var db: CityReaderDbHelper
     //endregion
 
 
     //region BEFORE/AFTER
     @Before
     fun init() {
-        initialize(10_000) {
+        initialize(HOWMANY) {
             db = helpers.buildDb(context)
         }
     }

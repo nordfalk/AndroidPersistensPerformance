@@ -1,12 +1,13 @@
-package com.luja93.dbms_benchmark.java_serialisering
+package com.luja93.dbms_benchmark.realm
 
 import android.content.Context
 import androidx.benchmark.junit4.BenchmarkRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.luja93.dbms_benchmark.BaseBenchmark
-import com.luja93.dbms_performance_benchmark.java_serialisering.City_JavaSerialisering
-import com.luja93.dbms_performance_benchmark.java_serialisering.JavaSerialiseringHelpers
+import com.luja93.dbms_performance_benchmark.realm.City_Realm
+import com.luja93.dbms_performance_benchmark.realm.RealmHelpers
+import io.realm.Realm
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -28,8 +29,8 @@ import org.junit.runner.RunWith
  * For regular run, use:
  *
  * adb shell am instrument -w -e "androidx.benchmark.output.enable" "true" -e \
- * "additionalTestOutputDir" "/sdcard/benchmark-results/greendao/" -e class \
- * com.luja93.dbms_benchmark.greendao.GreenDaoBenchmark \
+ * "additionalTestOutputDir" "/sdcard/benchmark-results/realm/" -e class \
+ * com.luja93.dbms_benchmark.realm.RealmBenchmark \
  * com.luja93.dbms_benchmark.test/androidx.benchmark.junit4.AndroidBenchmarkRunner
  *
  * To run with Android Test Orchestrator, use:
@@ -38,8 +39,8 @@ import org.junit.runner.RunWith
  * androidx.test.services.shellexecutor.ShellMain am instrument -r -w -e targetInstrumentation \
  * com.luja93.dbms_benchmark.test/androidx.benchmark.junit4.AndroidBenchmarkRunner -e \
  * clearPackageData true -e debug false -w -e "androidx.benchmark.output.enable" "true" -e \
- * "additionalTestOutputDir" "/sdcard/benchmark-results/greendao/" -e class \
- * 'com.luja93.dbms_benchmark.greendao.GreenDaoBenchmark' \
+ * "additionalTestOutputDir" "/sdcard/benchmark-results/realm/" -e class \
+ * 'com.luja93.dbms_benchmark.realm.RealmBenchmark' \
  * androidx.test.orchestrator/androidx.test.orchestrator.AndroidTestOrchestrator
  *
  *
@@ -52,29 +53,31 @@ import org.junit.runner.RunWith
  *     the implied warranties of merchantability and/or fitness for a
  *     particular purpose.
  */
+
 @RunWith(AndroidJUnit4::class)
-class GreenDaoBenchmark : BaseBenchmark<City_JavaSerialisering, DaoSession, JavaSerialiseringHelpers>() {
+class RealmBenchmark : BaseBenchmark<City_Realm, Realm, RealmHelpers>() {
 
     //region CLASS PROPERTIES
     override val benchmarkRule = BenchmarkRule()
     override val context: Context = ApplicationProvider.getApplicationContext()
-    override var cities: List<City_JavaSerialisering> = emptyList()
-    override val helpers: JavaSerialiseringHelpers = JavaSerialiseringHelpers
+    override var cities: List<City_Realm> = emptyList()
+    override val helpers = RealmHelpers
 
-    private lateinit var db: DaoSession
+    private lateinit var db: Realm
     //endregion
 
 
     //region BEFORE/AFTER
     @Before
     fun init() {
-        initialize(10_000) {
+        initialize(HOWMANY) {
             db = helpers.buildDb(context)
         }
     }
 
     @After
     fun destroy() {
+        db.close()
     }
     //endregion
 
@@ -102,4 +105,6 @@ class GreenDaoBenchmark : BaseBenchmark<City_JavaSerialisering, DaoSession, Java
         delete(db)
     }
     //endregion
+
 }
+

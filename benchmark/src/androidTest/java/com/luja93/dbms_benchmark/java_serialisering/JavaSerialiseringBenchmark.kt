@@ -1,13 +1,12 @@
-package com.luja93.dbms_benchmark.sqlite
+package com.luja93.dbms_benchmark.java_serialisering
 
 import android.content.Context
 import androidx.benchmark.junit4.BenchmarkRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.luja93.dbms_benchmark.BaseBenchmark
-import com.luja93.dbms_performance_benchmark.sqlite.CityReaderDbHelper
-import com.luja93.dbms_performance_benchmark.sqlite.City_SQLite
-import com.luja93.dbms_performance_benchmark.sqlite.SQLiteHelpers
+import com.luja93.dbms_performance_benchmark.java_serialisering.City_JavaSerialisering
+import com.luja93.dbms_performance_benchmark.java_serialisering.JavaSerialiseringHelpers
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -29,8 +28,8 @@ import org.junit.runner.RunWith
  * For regular run, use:
  *
  * adb shell am instrument -w -e "androidx.benchmark.output.enable" "true" -e \
- * "additionalTestOutputDir" "/sdcard/benchmark-results/sqlite/" -e class \
- * com.luja93.dbms_benchmark.sqlite.SQLiteBenchmark \
+ * "additionalTestOutputDir" "/sdcard/benchmark-results/greendao/" -e class \
+ * com.luja93.dbms_benchmark.greendao.GreenDaoBenchmark \
  * com.luja93.dbms_benchmark.test/androidx.benchmark.junit4.AndroidBenchmarkRunner
  *
  * To run with Android Test Orchestrator, use:
@@ -39,14 +38,14 @@ import org.junit.runner.RunWith
  * androidx.test.services.shellexecutor.ShellMain am instrument -r -w -e targetInstrumentation \
  * com.luja93.dbms_benchmark.test/androidx.benchmark.junit4.AndroidBenchmarkRunner -e \
  * clearPackageData true -e debug false -w -e "androidx.benchmark.output.enable" "true" -e \
- * "additionalTestOutputDir" "/sdcard/benchmark-results/sqlite/" -e class \
- * 'com.luja93.dbms_benchmark.sqlite.SQLiteBenchmark' \
+ * "additionalTestOutputDir" "/sdcard/benchmark-results/greendao/" -e class \
+ * 'com.luja93.dbms_benchmark.greendao.GreenDaoBenchmark' \
  * androidx.test.orchestrator/androidx.test.orchestrator.AndroidTestOrchestrator
  *
  *
  * @author  Luka Leopoldović
  * @version 1.0
- * \date 05/04/2020
+ * \date 13/04/2020
  * \copyright
  *     This code and information is provided "as is" without warranty of
  *     any kind, either expressed or implied, including but not limited to
@@ -54,29 +53,28 @@ import org.junit.runner.RunWith
  *     particular purpose.
  */
 @RunWith(AndroidJUnit4::class)
-class SQLiteBenchmark : BaseBenchmark<City_SQLite, CityReaderDbHelper, SQLiteHelpers>() {
+class JavaSerialiseringBenchmark : BaseBenchmark<City_JavaSerialisering, DaoSession, JavaSerialiseringHelpers>() {
 
     //region CLASS PROPERTIES
     override val benchmarkRule = BenchmarkRule()
     override val context: Context = ApplicationProvider.getApplicationContext()
-    override var cities: List<City_SQLite> = emptyList()
-    override val helpers = SQLiteHelpers
+    override var cities: List<City_JavaSerialisering> = emptyList()
+    override val helpers: JavaSerialiseringHelpers = JavaSerialiseringHelpers
 
-    private lateinit var db: CityReaderDbHelper
+    private lateinit var db: DaoSession
     //endregion
 
 
     //region BEFORE/AFTER
     @Before
     fun init() {
-        initialize(10_000) {
+        initialize(HOWMANY) {
             db = helpers.buildDb(context)
         }
     }
 
     @After
     fun destroy() {
-        db.close()
     }
     //endregion
 
@@ -104,5 +102,4 @@ class SQLiteBenchmark : BaseBenchmark<City_SQLite, CityReaderDbHelper, SQLiteHel
         delete(db)
     }
     //endregion
-
 }
